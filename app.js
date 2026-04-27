@@ -121,35 +121,42 @@ async function interpretFortune() {
     title (max 5 words), reading (exactly 60 words), luckyNumber (1-99), warningSign (one weird funny warning), auspiciousDay (day of week), verdict (one sentence summary starting with 'The Oracle declares:').`;
 
     try {
-        const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=mistral`);
+        // Removed ?model=mistral for better stability
+        const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`);
         const text = await response.text();
         
-        // Robust JSON extraction: look for anything between { and }
+        // Robust JSON extraction
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         let data;
         try {
             data = JSON.parse(jsonMatch ? jsonMatch[0] : text);
         } catch (e) {
             console.warn("JSON parse failed, trying manual match");
-            // Fallback: simple regex match for keys if JSON is malformed
             data = {
                 title: (text.match(/title["']?\s*:\s*["']([^"']+)["']/i) || [null, "The Unseen Path"])[1],
-                reading: (text.match(/reading["']?\s*:\s*["']([^"']+)["']/i) || [null, "The stars whisper of hidden journeys..."])[1],
-                luckyNumber: (text.match(/luckyNumber["']?\s*:\s*(\d+)/i) || text.match(/number["']?\s*:\s*(\d+)/i) || [null, "7"])[1],
-                auspiciousDay: (text.match(/auspiciousDay["']?\s*:\s*["']([^"']+)["']/i) || text.match(/day["']?\s*:\s*["']([^"']+)["']/i) || [null, "Today"])[1],
-                warningSign: (text.match(/warningSign["']?\s*:\s*["']([^"']+)["']/i) || [null, "Beware of shadows."])[1],
-                verdict: (text.match(/verdict["']?\s*:\s*["']([^"']+)["']/i) || [null, "The Oracle declares: Proceed with curiosity."])[1]
+                reading: (text.match(/reading["']?\s*:\s*["']([^"']+)["']/i) || [null, "The stars whisper of hidden journeys and secrets yet to be revealed..."])[1],
+                luckyNumber: (text.match(/luckyNumber["']?\s*:\s*(\d+)/i) || text.match(/number["']?\s*:\s*(\d+)/i) || [null, Math.floor(Math.random()*99)+1])[1],
+                auspiciousDay: (text.match(/auspiciousDay["']?\s*:\s*["']([^"']+)["']/i) || text.match(/day["']?\s*:\s*["']([^"']+)["']/i) || [null, ["Tuesday", "Friday", "Sunday"][Math.floor(Math.random()*3)]])[1],
+                warningSign: (text.match(/warningSign["']?\s*:\s*["']([^"']+)["']/i) || [null, "Beware of sudden gusts of wind."])[1],
+                verdict: (text.match(/verdict["']?\s*:\s*["']([^"']+)["']/i) || [null, "The Oracle declares: The tides are shifting."])[1]
             };
         }
         
-        // Normalize keys (handle camelCase vs snake_case)
+        // Normalize and provide varied fallbacks
+        const fallbacks = [
+            { warning: "Beware of cold tea.", verdict: "The Oracle declares: Luck is a revolving door." },
+            { warning: "Avoid stairs at midnight.", verdict: "The Oracle declares: A new path opens before you." },
+            { warning: "Watch for blue butterflies.", verdict: "The Oracle declares: Silence is your strongest ally." }
+        ];
+        const randomFB = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+
         const normalizedData = {
             title: data.title || "The Starry Path",
-            reading: data.reading || "The ether is thick with mystery.",
+            reading: data.reading || "The ether is thick with mystery. Your destiny is currently obscured by cosmic dust, but a light remains visible in the distance.",
             luckyNumber: data.luckyNumber || data.lucky_number || data.number || Math.floor(Math.random()*99)+1,
-            auspiciousDay: data.auspiciousDay || data.auspicious_day || data.day || "Solsticeday",
-            warningSign: data.warningSign || data.warning_sign || data.warning || "None detected.",
-            verdict: data.verdict || "The Oracle declares: All is in motion."
+            auspiciousDay: data.auspiciousDay || data.auspicious_day || data.day || "Moon-day",
+            warningSign: data.warningSign || data.warning_sign || data.warning || randomFB.warning,
+            verdict: data.verdict || randomFB.verdict
         };
 
         renderReading(normalizedData);
