@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Oracle 🔮 | Mystical Fortune Reading</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Quattrocento:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="stars-container"></div>
+    <div id="emoji-particles"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">EMOJI ORACLE 🔮</h1>
+            <p class="subtitle">Emojis know your future better than you do.</p>
+            <div class="consultation-counter">Consultations today: <span id="count">0</span></div>
+        </header>
+
+        <!-- Main Interaction Area -->
+        <main class="oracle-main">
+            <div id="shake-instruction" class="instruction">🤳 Shake your phone or click the orb</div>
+            
+            <!-- Crystal Ball -->
+            <div id="crystal-ball" class="crystal-ball">
+                <div class="ball-inner-glow"></div>
+                <div class="ball-glare"></div>
+                <div class="emoji-slots">
+                    <div id="slot-1" class="slot">?</div>
+                    <div id="slot-2" class="slot">?</div>
+                    <div id="slot-3" class="slot">?</div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="user-question" placeholder="Ask your question (optional)..." autocomplete="off">
+            </div>
+        </main>
+
+        <!-- Reading Overlay -->
+        <div id="reading-overlay" class="overlay hidden">
+            <div id="reading-card" class="parchment-card">
+                <div class="loader hidden" id="oracle-loader">
+                    <div class="spinning-sparkle">✨</div>
+                    <p>The Oracle ponders...</p>
+                </div>
+                
+                <div id="reading-content" class="hidden">
+                    <h2 id="reading-title" class="mystical-title">The Starry Path</h2>
+                    <p id="reading-text" class="reading-body"></p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Lucky Number</span>
+                            <span id="lucky-num" class="stat-value badge">77</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Auspicious Day</span>
+                            <span id="auspicious-day" class="stat-value">Friday</span>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <span class="warning-label">⚠️ Warning Sign</span>
+                        <p id="warning-text"></p>
+                    </div>
+
+                    <div class="verdict-banner">
+                        <p id="verdict-text"></p>
+                    </div>
+
+                    <div class="card-actions">
+                        <button id="btn-reset" class="btn btn-secondary">Ask Again</button>
+                        <button id="btn-share" class="btn btn-primary">Share Fortune</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Panel -->
+        <button id="btn-history" class="btn-history-toggle">📜 History</button>
+        <aside id="history-panel" class="history-panel hidden">
+            <h3>Previous Consultations</h3>
+            <div id="history-list"></div>
+        </aside>
+
+        <button id="audio-toggle" class="audio-toggle">🔮</button>
+        <canvas id="share-canvas" style="display:none"></canvas>
+    </div>
+
+    <script src="audio.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

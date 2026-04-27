@@ -1,0 +1,390 @@
+:root {
+    --bg-dark: #09090b;
+    --gold: #fbbf24;
+    --violet: #8b5cf6;
+    --violet-glow: rgba(139, 92, 246, 0.4);
+    --parchment: #fdf6e3;
+    --font-mystical: 'Cinzel Decorative', cursive;
+    --font-serif: 'Quattrocento', serif;
+}
+
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: white;
+    font-family: var(--font-serif);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- STARS & PARTICLES --- */
+#stars-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+#emoji-particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.15;
+    animation: drift 15s linear infinite;
+}
+
+@keyframes drift {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    20% { opacity: 0.15; }
+    80% { opacity: 0.15; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- APP CONTAINER --- */
+.app-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+}
+
+.header {
+    margin-bottom: 3rem;
+}
+
+.logo {
+    font-family: var(--font-mystical);
+    color: var(--gold);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+}
+
+.subtitle {
+    color: var(--violet);
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.consultation-counter {
+    font-size: 0.8rem;
+    color: #444;
+    margin-top: 1rem;
+}
+
+/* --- CRYSTAL BALL --- */
+.crystal-ball {
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), transparent 60%),
+                radial-gradient(circle at 70% 70%, var(--violet-glow), transparent 60%),
+                rgba(139, 92, 246, 0.05);
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 0 50px var(--violet-glow),
+                inset 0 0 40px rgba(139, 92, 246, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.crystal-ball:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 80px var(--violet-glow),
+                inset 0 0 60px rgba(139, 92, 246, 0.3);
+}
+
+.ball-inner-glow {
+    position: absolute;
+    width: 80%; height: 80%;
+    background: radial-gradient(circle, var(--violet-glow) 0%, transparent 70%);
+    animation: pulseGlow 4s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.ball-glare {
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 40%);
+    pointer-events: none;
+}
+
+.emoji-slots {
+    display: flex;
+    gap: 0.8rem;
+    font-size: 3rem;
+    z-index: 5;
+    text-shadow: 0 0 15px rgba(255,255,255,0.5);
+}
+
+.slot {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slot.locked {
+    animation: lockScale 0.4s ease;
+}
+
+@keyframes lockScale {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.6); filter: brightness(2); }
+    100% { transform: scale(1); }
+}
+
+.ball-shaking {
+    animation: shakeBall 0.4s infinite;
+}
+
+@keyframes shakeBall {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-5px, 5px); }
+    75% { transform: translate(5px, -5px); }
+}
+
+.instruction {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--violet);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.input-container {
+    margin-top: 2.5rem;
+}
+
+input[type="text"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    color: white;
+    width: 100%;
+    max-width: 300px;
+    font-family: var(--font-serif);
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- OVERLAY & CARD --- */
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    backdrop-filter: blur(5px);
+}
+
+.hidden { display: none !important; }
+
+.parchment-card {
+    background: var(--parchment);
+    color: #2b1d0e;
+    padding: 3rem;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 5px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+    position: relative;
+    border: 8px double #8b5cf633;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.mystical-title {
+    font-family: var(--font-mystical);
+    color: #7c2d12;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(124, 45, 18, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.reading-body {
+    font-style: italic;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #9a3412;
+}
+
+.badge {
+    background: var(--violet);
+    color: white;
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.warning-box {
+    background: #fee2e2;
+    border-left: 4px solid #dc2626;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.warning-label {
+    font-weight: 700;
+    color: #991b1b;
+    font-size: 0.8rem;
+}
+
+.verdict-banner {
+    background: var(--violet);
+    color: white;
+    padding: 0.8rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-serif);
+    transition: all 0.3s ease;
+}
+
+.btn-primary { background: var(--violet); color: white; }
+.btn-secondary { background: transparent; border: 2px solid var(--violet); color: var(--violet); }
+
+.spinning-sparkle {
+    font-size: 4rem;
+    animation: rotateSparkle 2s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes rotateSparkle {
+    100% { transform: rotate(360deg); }
+}
+
+/* --- UI COMPONENTS --- */
+.audio-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid var(--violet);
+    color: white;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-history-toggle {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    color: var(--violet);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.history-panel {
+    position: fixed;
+    top: 5rem;
+    right: 2rem;
+    width: 300px;
+    background: rgba(0,0,0,0.9);
+    border: 1px solid var(--violet);
+    padding: 1.5rem;
+    border-radius: 15px;
+    z-index: 50;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .crystal-ball { width: 200px; height: 200px; }
+    .emoji-slots { font-size: 2.5rem; }
+    .logo { font-size: 1.8rem; }
+    .parchment-card { padding: 1.5rem; }
+}
