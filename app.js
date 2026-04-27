@@ -124,14 +124,38 @@ async function interpretFortune() {
         const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=mistral`);
         const text = await response.text();
         
-        // Extract JSON (sometimes LLMs wrap in markdown)
-        const jsonMatch = text.match(/\{.*\}/s);
-        const data = JSON.parse(jsonMatch ? jsonMatch[0] : text);
+        // Robust JSON extraction: look for anything between { and }
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        let data;
+        try {
+            data = JSON.parse(jsonMatch ? jsonMatch[0] : text);
+        } catch (e) {
+            console.warn("JSON parse failed, trying manual match");
+            // Fallback: simple regex match for keys if JSON is malformed
+            data = {
+                title: (text.match(/title["']?\s*:\s*["']([^"']+)["']/i) || [null, "The Unseen Path"])[1],
+                reading: (text.match(/reading["']?\s*:\s*["']([^"']+)["']/i) || [null, "The stars whisper of hidden journeys..."])[1],
+                luckyNumber: (text.match(/luckyNumber["']?\s*:\s*(\d+)/i) || text.match(/number["']?\s*:\s*(\d+)/i) || [null, "7"])[1],
+                auspiciousDay: (text.match(/auspiciousDay["']?\s*:\s*["']([^"']+)["']/i) || text.match(/day["']?\s*:\s*["']([^"']+)["']/i) || [null, "Today"])[1],
+                warningSign: (text.match(/warningSign["']?\s*:\s*["']([^"']+)["']/i) || [null, "Beware of shadows."])[1],
+                verdict: (text.match(/verdict["']?\s*:\s*["']([^"']+)["']/i) || [null, "The Oracle declares: Proceed with curiosity."])[1]
+            };
+        }
         
-        renderReading(data);
+        // Normalize keys (handle camelCase vs snake_case)
+        const normalizedData = {
+            title: data.title || "The Starry Path",
+            reading: data.reading || "The ether is thick with mystery.",
+            luckyNumber: data.luckyNumber || data.lucky_number || data.number || Math.floor(Math.random()*99)+1,
+            auspiciousDay: data.auspiciousDay || data.auspicious_day || data.day || "Solsticeday",
+            warningSign: data.warningSign || data.warning_sign || data.warning || "None detected.",
+            verdict: data.verdict || "The Oracle declares: All is in motion."
+        };
+
+        renderReading(normalizedData);
         
         // Save to history
-        const historyItem = { ...data, emojis: state.results, date: new Date().toLocaleDateString() };
+        const historyItem = { ...normalizedData, emojis: state.results, date: new Date().toLocaleDateString() };
         state.history.unshift(historyItem);
         if (state.history.length > 10) state.history.pop();
         localStorage.setItem('oracle_history', JSON.stringify(state.history));
